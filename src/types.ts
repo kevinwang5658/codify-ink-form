@@ -20,10 +20,10 @@ export type Description = string | string[] | JSX.Element | undefined | false;
 export interface FormProps {
   /** Structure of the form, i.e. which fields are contained in which sections. */
   form: FormStructure;
-  initialValue?: object;
+  initialValue?: Array<Record<string, any>>;
 
   /** Current value of the form. Omit to leave the component in uncontrolled mode. */
-  value?: object;
+  value?: Array<Record<string, any>>;
   onChange?: (value: object) => void;
 
   /**
@@ -32,7 +32,7 @@ export interface FormProps {
    *
    * @param value the final value of the form.
    * */
-  onSubmit?: (value: object) => void;
+  onSubmit?: (value: Array<Record<string, any>>) => void;
 
   /**
    * You can use custom field implementations, by specifying their ``type`` attribute to a custom

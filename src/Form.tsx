@@ -7,11 +7,14 @@ import { FormFieldRenderer } from './FormFieldRenderer.js';
 import { DescriptionRenderer } from './DescriptionRenderer.js';
 import { canSubmit } from './canSubmit.js';
 import { SubmitButton } from './SubmitButton.js';
+import { Button } from './Button.js';
 
 export const Form: React.FC<FormProps> = props => {
   const isControlled = props.value !== undefined;
   const [currentTab, setCurrentTab] = useState(0);
-  const [value, setValue] = useState<object>(props.value ?? {});
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [sections, setSections] = useState(props.form.sections);
+  const [value, setValue] = useState<Array<Record<string, unknown>>>(props.value ?? Array.from({ length: sections.length }, () => ({})));
   const [editingField, setEditingField] = useState<string>();
   const canSubmitForm = useMemo(() => canSubmit(props.form, value), [value, props.form]);
   const focusManager = useFocusManager();
@@ -29,21 +32,25 @@ export const Form: React.FC<FormProps> = props => {
   useEffect(() => {
     // Set initial values
     if (!isControlled) {
-      setValueAndPropagate({
-        ...value,
-        ...props.form.sections
-          .map(section =>
-            section.fields
-              .map(field => (field.initialValue !== undefined ? { [field.name]: field.initialValue } : {}))
-              .reduce((obj1, obj2) => ({ ...obj1, ...obj2 }), {})
-          )
-          .reduce((obj1, obj2) => ({ ...obj1, ...obj2 }), {}),
-      });
+      setValue(Array.from({ length: sections.length }, () => ({})));
+
+
+      // setValueAndPropagate({
+      //   ...value,
+      //   ...props.form.sections
+      //     .map(section =>
+      //       section.fields
+      //         .map(field => (field.initialValue !== undefined ? { [field.name]: field.initialValue } : {}))
+      //         .reduce((obj1, obj2) => ({ ...obj1, ...obj2 }), {})
+      //     )
+      //     .reduce((obj1, obj2) => ({ ...obj1, ...obj2 }), {}),
+      // });
     }
   }, []);
 
-  const setValueAndPropagate = (value: object) => {
-    setValue(value);
+  const setValueAndPropagate = (index: number, newValue: Record<string, unknown>) => {
+    value[index] = newValue
+    setValue(structuredClone(value));
     props.onChange?.(value);
   };
 
@@ -58,33 +65,62 @@ export const Form: React.FC<FormProps> = props => {
     { isActive: !editingField }
   );
 
+  const duplicateCurrentItem = () => {
+    const newTabs = [...sections]
+    newTabs.splice(currentTab + 1, 0, sections[currentTab])
+
+    const newValue = { ...value[currentTab]};
+    value.splice(currentTab + 1, 0, newValue);
+
+    setSections(newTabs);
+    setValue([...value]);
+  }
+
+  const removeCurrentItem = () => {
+    const newTabs = [...sections]
+    newTabs.splice(currentTab, 1);
+    value.splice(currentTab, 1)
+
+    setSections(newTabs);
+    setValue([...value]);
+  }
+
   return (
-    <Box width="100%" height="100%" flexDirection="column">
-      <FormHeader {...props} currentTab={currentTab} onChangeTab={setCurrentTab} editingField={editingField} />
-      {!editingField && props.form.sections[currentTab].description && (
+    !isSubmitted && <Box width="100%" height="90%" flexDirection="column" overflowY="hidden">
+      <FormHeader {...props} form={{ ...props.form, sections }} currentTab={currentTab} onChangeTab={setCurrentTab} editingField={editingField} />
+      {!editingField && sections[currentTab].description && (
         <Box marginX={4}>
-          <DescriptionRenderer description={props.form.sections[currentTab].description} />
+          <DescriptionRenderer description={props.form.sections[currentTab]?.description} />
         </Box>
       )}
       <Box flexDirection="column">
         {currentTab > props.form.sections.length - 1
           ? null
-          : props.form.sections[currentTab].fields.map(field => (
-              <FormFieldRenderer
-                field={field}
-                key={field.name}
-                form={props.form}
-                value={value[field.name]}
-                onChange={v => setValueAndPropagate({ ...value, [field.name]: v })}
-                onSetEditingField={setEditingField}
-                editingField={editingField}
-                customManagers={props.customManagers}
-              />
-            ))}
+          : sections[currentTab].fields.map((field, index) => (
+            <FormFieldRenderer
+              field={field}
+              key={field.name + currentTab}
+              form={props.form}
+              value={value[currentTab][field.name]}
+              onChange={v => setValueAndPropagate(currentTab, { ...value[currentTab], [field.name]: v })}
+              onSetEditingField={setEditingField}
+              editingField={editingField}
+              customManagers={props.customManagers}
+            />
+          ))}
+        <Box flexDirection="row-reverse">
+          <Button label="Add Item (duplicate)" onClicked={() => duplicateCurrentItem()}/>
+        </Box>
+        <Box flexDirection="row-reverse">
+          <Button label="Remove" onClicked={() => removeCurrentItem()}/>
+        </Box>
       </Box>
       {!editingField && (
         <Box flexDirection="row-reverse">
-          <SubmitButton canSubmit={canSubmitForm} onSubmit={() => props.onSubmit?.(value)} />
+          <SubmitButton canSubmit={canSubmitForm} onSubmit={() => {
+            props.onSubmit?.(value)
+            setIsSubmitted(true);
+          }}/>
         </Box>
       )}
     </Box>

@@ -44,7 +44,7 @@ export const FormHeader: React.FC<
         <Box>
           {!props.editingField ? (
             sections.map((section, id) => (
-              <Box key={section.title}>
+              <Box key={section.title + id}>
                 <Text color="gray">[{id + 1}] </Text>
                 <Text color={props.currentTab === id ? 'blue' : undefined} underline={props.currentTab === id}>
                   {section.title}

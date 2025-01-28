@@ -1,5 +1,5 @@
-import { Box, measureElement, useInput } from 'ink';
-import React from 'react';
+import { Box, measureElement, useFocusManager, useInput } from 'ink';
+import React, { ReactNode } from 'react';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -14,14 +14,14 @@ const reducer = (state, action) => {
         ...state,
         scrollTop: Math.min(
           state.innerHeight - state.height,
-          state.scrollTop + 1
+          state.scrollTop + 3
         )
       };
 
     case 'SCROLL_UP':
       return {
         ...state,
-        scrollTop: Math.max(0, state.scrollTop - 1)
+        scrollTop: Math.max(0, state.scrollTop - 3)
       };
 
     default:
@@ -29,11 +29,13 @@ const reducer = (state, action) => {
   }
 };
 
-export function ScrollArea({height, children}) {
+export function ScrollArea({height, isStart, children}) {
   const [state, dispatch] = React.useReducer(reducer, {
-    height,
-    scrollTop: 0
+    height: 10,
+    scrollTop: 0,
   });
+  const focusManager = useFocusManager();
+  focusManager.enableFocus();
 
   const innerRef = React.useRef();
 
@@ -47,6 +49,10 @@ export function ScrollArea({height, children}) {
   }, []);
 
   useInput((_input, key) => {
+    if (isStart || (children.length + 2) * 4 < height) {
+      return;
+    }
+
     if (key.downArrow) {
       dispatch({
         type: 'SCROLL_DOWN'

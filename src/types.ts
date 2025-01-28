@@ -174,6 +174,7 @@ export interface FormFieldManager<T extends FormField> {
 }
 
 export type FormFieldRendererProps<T extends FormField> = {
+  id: string;
   field: T;
   form: FormStructure;
   value?: ValueOfField<T>;

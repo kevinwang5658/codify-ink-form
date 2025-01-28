@@ -30,7 +30,7 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps<any>> = props =>
     setError(undefined);
   };
 
-  const { isFocused } = useFocus({});
+  const { isFocused } = useFocus({id: props.id});
 
   useInput(
     (input, key) => {

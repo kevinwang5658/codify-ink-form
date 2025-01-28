@@ -32,7 +32,11 @@ export const Form: React.FC<FormProps> = props => {
   useEffect(() => {
     // Set initial values
     if (!isControlled) {
-      setValue(Array.from({ length: sections.length }, () => ({})));
+      props.form.sections.forEach((section, index) => {
+        setValueAndPropagate(index, section.fields
+          .map(field => (field.initialValue !== undefined ? { [field.name]: field.initialValue } : {}))
+          .reduce((obj1, obj2) => ({ ...obj1, ...obj2 }), {}));
+      })
 
 
       // setValueAndPropagate({

@@ -1,5 +1,5 @@
-import { Box, useFocusManager, useInput } from 'ink';
-import { useEffect, useMemo, useState } from 'react';
+import { Box, measureElement, useFocusManager, useInput } from 'ink';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import * as React from 'react';
 import { FormProps } from './types.js';
 import { FormHeader } from './FormHeader.js';
@@ -21,6 +21,8 @@ export const Form: React.FC<FormProps> = props => {
   const canSubmitForm = useMemo(() => canSubmit(props.form, value), [value, props.form]);
   const focusManager = useFocusManager();
   const [focusedElement, setFocusedElement] = useState(0);
+  const headerRef = useRef();
+  const headerHeight = headerRef.current ? measureElement(headerRef.current).height : 5
 
   useEffect(() => {
     focusManager.enableFocus();
@@ -118,8 +120,8 @@ export const Form: React.FC<FormProps> = props => {
   return (
     <FullScreen>
       <Box width="100%" height="90%" flexDirection="column" overflowY="hidden">
-        <FormHeader {...props} form={{ ...props.form, sections }} currentTab={currentTab} onChangeTab={onChangeTab} editingField={editingField} />
-        <ScrollArea height={size.rows - 6} key={currentTab} isStart={focusedElement === 0}>
+        <FormHeader {...props} headerRef={headerRef} form={{ ...props.form, sections }} currentTab={currentTab} onChangeTab={onChangeTab} editingField={editingField} />
+        <ScrollArea height={size.rows - headerHeight} key={currentTab} isStart={focusedElement === 0}>
           {!editingField && sections[currentTab].description && (
             <Box marginX={4}>
               <DescriptionRenderer description={props.form.sections[currentTab]?.description} />

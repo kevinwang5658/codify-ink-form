@@ -5,7 +5,7 @@ import { FormProps } from './types.js';
 export const HELP_SECTION_ID = 'Help';
 
 export const FormHeader: React.FC<
-  FormProps & { currentTab: number; onChangeTab: (tab: number) => void; editingField?: string }
+  FormProps & { currentTab: number; onChangeTab: (tab: number) => void; editingField?: string, headerRef?: React.Ref<any> }
 > = props => {
   const sections = props.form.sections;
 
@@ -29,7 +29,7 @@ export const FormHeader: React.FC<
   );
 
   return (
-    <Box borderStyle="double" width="100%" flexDirection="column">
+    <Box borderStyle="double" width="100%" flexDirection="column" ref={props.headerRef}>
       <Box width="100%">
         <Box flexGrow={1}>
           <Text bold={true}>{props.form.title}</Text>

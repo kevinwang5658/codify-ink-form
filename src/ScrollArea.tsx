@@ -1,8 +1,13 @@
 import { Box, measureElement, useFocusManager, useInput } from 'ink';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 
 const reducer = (state, action) => {
   switch (action.type) {
+    case 'RESET':
+      return {
+        ...state,
+        scrollTop: 0,
+      }
     case 'SET_INNER_HEIGHT':
       return {
         ...state,
@@ -35,9 +40,22 @@ export function ScrollArea({height, isStart, children}) {
     scrollTop: 0,
   });
   const focusManager = useFocusManager();
+  const [canScroll, setCanScroll] = useState(true);
+
   focusManager.enableFocus();
 
   const innerRef = React.useRef();
+
+  useEffect(() => {
+    if (isStart || (children.length + 3) * 3 < (height - 6)) {
+      setCanScroll(false);
+      dispatch({
+        type: 'RESET'
+      })
+    } else {
+      setCanScroll(true);
+    }
+  }, [height, isStart, children.length]);
 
   React.useEffect(() => {
     const dimensions = measureElement(innerRef.current);
@@ -49,7 +67,7 @@ export function ScrollArea({height, isStart, children}) {
   }, []);
 
   useInput((_input, key) => {
-    if (isStart || (children.length + 2) * 4 < height) {
+    if (!canScroll) {
       return;
     }
 

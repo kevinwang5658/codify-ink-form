@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormField, FormFieldRendererProps, SpecificFormFieldRendererProps } from './types.js';
-import { Box, useFocus, Text, useInput } from 'ink';
+import { Box, useFocus, Text, useInput, useFocusManager } from 'ink';
 import { getManager } from './managers/managers.js';
 import { DescriptionRenderer } from './DescriptionRenderer.js';
 
@@ -42,7 +42,7 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps<any>> = props =>
         save();
       }
     },
-    { isActive: isFocused }
+    { isActive: isFocused || isEditing }
   );
 
   if (hide) {

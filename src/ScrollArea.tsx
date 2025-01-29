@@ -1,5 +1,5 @@
 import { Box, measureElement, useFocusManager, useInput } from 'ink';
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useLayoutEffect, useState } from 'react';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -46,7 +46,7 @@ export function ScrollArea({height, isStart, children}) {
 
   const innerRef = React.useRef();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isStart || (children.length) * 1 + 3 * 3 < (height - 6)) {
       setCanScroll(false);
       dispatch({

@@ -2,7 +2,7 @@ import { Box, BoxProps } from 'ink';
 import React, { PropsWithChildren, useLayoutEffect } from 'react';
 import { useEffect, useState } from 'react';
 
-function useStdoutDimensions(): [number, number] {
+export function useStdoutDimensions(): [number, number] {
   const {columns, rows} = process.stdout;
   const [size, setSize] = useState({columns, rows});
   useEffect(() => {

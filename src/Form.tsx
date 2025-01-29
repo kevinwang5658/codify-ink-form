@@ -9,7 +9,7 @@ import { canSubmit } from './canSubmit.js';
 import { SubmitButton } from './SubmitButton.js';
 import { Button } from './Button.js';
 import { ScrollArea } from './ScrollArea.js';
-import { FullScreen } from './FullScreen.js';
+import { FullScreen, useStdoutDimensions } from './FullScreen.js';
 
 export const Form: React.FC<FormProps> = props => {
   const isControlled = props.value !== undefined;
@@ -98,30 +98,13 @@ export const Form: React.FC<FormProps> = props => {
     setValue([...value]);
   }
 
-  const [size, setSize] = useState({
-    columns: process.stdout.columns,
-    rows: process.stdout.rows,
-  });
-
-  useEffect(() => {
-    function onResize() {
-      setSize({
-        columns: process.stdout.columns,
-        rows: process.stdout.rows,
-      });
-    }
-
-    process.stdout.on("resize", onResize);
-    return () => {
-      process.stdout.off("resize", onResize);
-    };
-  }, []);
+  const [, fullHeight] = useStdoutDimensions()
 
   return (
     <FullScreen>
       <Box width="100%" height="90%" flexDirection="column" overflowY="hidden">
         <FormHeader {...props} headerRef={headerRef} form={{ ...props.form, sections }} currentTab={currentTab} onChangeTab={onChangeTab} editingField={editingField} />
-        <ScrollArea height={size.rows - headerHeight} key={currentTab} isStart={focusedElement === 0}>
+        <ScrollArea height={fullHeight - headerHeight} key={currentTab} isStart={focusedElement === 0}>
           {!editingField && sections[currentTab].description && (
             <Box marginX={4}>
               <DescriptionRenderer description={props.form.sections[currentTab]?.description} />

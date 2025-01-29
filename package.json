@@ -36,6 +36,7 @@
   "scripts": {
     "start": "ts-node-esm src/demo/overview.tsx",
     "demo:overview": "tsx src/demo/overview.tsx",
+    "demo:counter": "tsx src/demo/counter.tsx",
     "demo:codify": "tsx src/demo/codify.tsx",
     "demo:packagejson": "tsx src/demo/packagejson.tsx",
     "demo:custommanager": "tsx src/demo/custommanager.tsx",

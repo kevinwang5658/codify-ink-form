@@ -1,6 +1,7 @@
-import { render } from 'ink';
+import { Box, Text, render } from 'ink';
 import { Form } from '../Form.js';
 import React from 'react';
+import { Test } from './Test.js';
 
 const options = [
   {label: 'Millenium Falcon', value: 'falcon'},
@@ -9,43 +10,13 @@ const options = [
   {label: 'Raizorcrest', value: 'mando'},
 ];
 
+console.log('Test');
+console.log('Test 1');
+console.log('Test 2');
+console.log('Test 3');
+
 render(
-  <Form
-    onSubmit={value => console.log(`Submitted: `, value)}
-    form={{
-      title: "Form title",
-      sections: [
-        {
-          title: "asdf-global",
-          fields: [
-            { type: 'string', name: 'plugin', label: 'plugin', required: true },
-            { type: 'string', name: 'version', label: 'version', required: true },
-          ]
-        },
-        {
-          title: "asdf-install",
-          fields: [
-            { type: 'string', name: 'directory', label: 'directory', required: true },
-          ]
-        },
-        {
-          title: "asdf-local",
-          fields: [
-            { type: 'string', name: 'plugin', label: 'plugin', required: true },
-            { type: 'string', name: 'version', label: 'version', required: true },
-            { type: 'string', name: 'directory', label: 'directory' },
-            { type: 'string', name: 'directories', label: 'directories' },
-          ]
-        },
-        {
-          title: "asdf-plugin",
-          fields: [
-            { type: 'string', name: 'plugin', label: 'plugin', required: true },
-            { type: 'string', name: 'versions', label: 'version'},
-            { type: 'string', name: 'gitUrl', label: 'plugin' },
-          ]
-        },
-      ]
-    }}
-  />
+  <Box>
+    <Test/>
+  </Box>
 );

@@ -1,34 +1,24 @@
-import { Box } from 'ink';
-import React from 'react';
+import { Box, BoxProps } from 'ink';
+import React, { PropsWithChildren, useLayoutEffect } from 'react';
 import { useEffect, useState } from 'react';
 
-export function FullScreen(props) {
-  const [size, setSize] = useState({
-    columns: process.stdout.columns,
-    rows: process.stdout.rows,
-  });
-
+function useStdoutDimensions(): [number, number] {
+  const {columns, rows} = process.stdout;
+  const [size, setSize] = useState({columns, rows});
   useEffect(() => {
     function onResize() {
-      setSize({
-        columns: process.stdout.columns,
-        rows: process.stdout.rows,
-      });
+      const {columns, rows} = process.stdout;
+      setSize({columns, rows});
     }
-
     process.stdout.on("resize", onResize);
-    process.stdout.write("\x1b[?1049h");
-    process.stdout.write("\x1b[?1000h");
     return () => {
       process.stdout.off("resize", onResize);
-      process.stdout.write("\x1b[?1049l");
-      process.stdout.write("\x1b[?1000l");
     };
   }, []);
+  return [size.columns, size.rows];
+}
 
-  return (
-    <Box width={size.columns} height={size.rows}>
-      {props.children}
-    </Box>
-  );
+export const FullScreen: React.FC<PropsWithChildren<BoxProps>> = ({children, ...styles}) => {
+  const [columns, rows] = useStdoutDimensions();
+  return <Box width={columns} height={rows} {...styles}>{children}</Box>;
 }

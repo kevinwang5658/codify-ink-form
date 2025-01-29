@@ -16,13 +16,15 @@ export const Form: React.FC<FormProps> = props => {
   const [currentTab, setCurrentTab] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [sections, setSections] = useState(props.form.sections);
+  const form = { ...props.form, sections }
   const [value, setValue] = useState<Array<Record<string, unknown>>>(props.value ?? Array.from({ length: sections.length }, () => ({})));
   const [editingField, setEditingField] = useState<string>();
-  const canSubmitForm = useMemo(() => canSubmit(props.form, value), [value, props.form]);
+  const canSubmitForm = useMemo(() => canSubmit(form, value), [value, form]);
   const focusManager = useFocusManager();
   const [focusedElement, setFocusedElement] = useState(0);
   const headerRef = useRef();
   const headerHeight = headerRef.current ? measureElement(headerRef.current).height : 5
+  const [, fullHeight] = useStdoutDimensions()
 
   useEffect(() => {
     focusManager.enableFocus();
@@ -45,7 +47,7 @@ export const Form: React.FC<FormProps> = props => {
     }
   }, []);
 
-  const onChangeTab = (tab) => {
+  const onChangeTab = (tab: number) => {
     setCurrentTab(tab);
     focusManager.focus('0');
     setFocusedElement(0)
@@ -67,6 +69,8 @@ export const Form: React.FC<FormProps> = props => {
         setFocusedElement((focusedElement) => focusedElement - 1);
         focusManager.focusPrevious();
       } else if (key.downArrow) {
+        // This calculates the maximum amount of children there is. We don't want to scroll past the last item
+        // Fields.length is number of json fields. 2 is the add and remove buttons. Submit button is sometimes focusable
         if (focusedElement + 1 > sections[currentTab].fields.length + 2 + (canSubmitForm ? 1 : 0)) {
           return;
         }
@@ -96,18 +100,17 @@ export const Form: React.FC<FormProps> = props => {
 
     setSections(newTabs);
     setValue([...value]);
+    onChangeTab(currentTab - 1)
   }
-
-  const [, fullHeight] = useStdoutDimensions()
 
   return (
     <FullScreen>
       <Box width="100%" height="90%" flexDirection="column" overflowY="hidden">
-        <FormHeader {...props} headerRef={headerRef} form={{ ...props.form, sections }} currentTab={currentTab} onChangeTab={onChangeTab} editingField={editingField} />
+        <FormHeader {...props} headerRef={headerRef} form={form} currentTab={currentTab} onChangeTab={onChangeTab} editingField={editingField} />
         <ScrollArea height={fullHeight - headerHeight} key={currentTab} isStart={focusedElement === 0}>
           {!editingField && sections[currentTab].description && (
             <Box marginX={4}>
-              <DescriptionRenderer description={props.form.sections[currentTab]?.description} />
+              <DescriptionRenderer description={sections[currentTab]?.description} />
             </Box>
           )}
           {!editingField && (
@@ -119,14 +122,14 @@ export const Form: React.FC<FormProps> = props => {
             </Box>
           )}
           <Box flexDirection="column">
-            {currentTab > props.form.sections.length - 1
+            {currentTab > sections.length - 1
               ? null
               : sections[currentTab].fields.map((field, index) => (
                 <FormFieldRenderer
                   id={index + ''}
                   field={field}
                   key={field.name + currentTab}
-                  form={props.form}
+                  form={form}
                   value={value[currentTab][field.name]}
                   onChange={v => setValueAndPropagate(currentTab, { ...value[currentTab], [field.name]: v })}
                   onSetEditingField={setEditingField}
@@ -138,10 +141,10 @@ export const Form: React.FC<FormProps> = props => {
               <Text>{' }'}</Text>
             )}
             <Box flexDirection="row-reverse">
-              <Button label="Add Item (duplicate)" onClicked={() => duplicateCurrentItem()}/>
+              <Button label="Add (duplicate)" id={'addButton'} onClicked={() => duplicateCurrentItem()}/>
             </Box>
             <Box flexDirection="row-reverse">
-              <Button label="Remove" onClicked={() => removeCurrentItem()}/>
+              <Button label="Remove" id={'removeButton'} onClicked={() => removeCurrentItem()}/>
             </Box>
           </Box>
           {!editingField && (

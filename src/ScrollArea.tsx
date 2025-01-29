@@ -47,6 +47,9 @@ export function ScrollArea({height, isStart, children}) {
   const innerRef = React.useRef();
 
   useLayoutEffect(() => {
+    // Couple of custom logic baked into here to improve the user experience
+    // isStart ensures that the first down event will not scroll. This is because initially nothing has focus so the first down gives focus to the first element
+    // The children.length calculation calculates a rough estimate of the total height. The 3 is the height of the buttons at the bottom.
     if (isStart || (children.length) * 1 + 3 * 3 < (height - 6)) {
       setCanScroll(false);
       dispatch({

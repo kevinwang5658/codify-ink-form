@@ -4,8 +4,9 @@ import React from 'react';
 export function Button(props: {
   label: string;
   onClicked?: () => void;
+  id?: string;
 }) {
-  const { isFocused } = useFocus({});
+  const { isFocused } = useFocus(props.id ? { id: props.id } : {});
   useInput((input, key) => {
     if (key.return && isFocused) {
       props.onClicked?.();

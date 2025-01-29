@@ -1,4 +1,4 @@
-import { Box, measureElement, useFocusManager, useInput } from 'ink';
+import { Box, Text, measureElement, useFocusManager, useInput } from 'ink';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import * as React from 'react';
 import { FormProps } from './types.js';
@@ -127,6 +127,10 @@ export const Form: React.FC<FormProps> = props => {
               <DescriptionRenderer description={props.form.sections[currentTab]?.description} />
             </Box>
           )}
+          <Box marginLeft={1} marginTop={1}>
+            <Text bold>{sections[currentTab].title}</Text>
+          </Box>
+          <Text>{' {'}</Text>
           <Box flexDirection="column">
             {currentTab > props.form.sections.length - 1
               ? null
@@ -143,6 +147,7 @@ export const Form: React.FC<FormProps> = props => {
                   customManagers={props.customManagers}
                 />
               ))}
+            <Text>{' }'}</Text>
             <Box flexDirection="row-reverse">
               <Button label="Add Item (duplicate)" onClicked={() => duplicateCurrentItem()}/>
             </Box>

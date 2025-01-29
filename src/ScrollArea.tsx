@@ -19,14 +19,14 @@ const reducer = (state, action) => {
         ...state,
         scrollTop: Math.min(
           state.innerHeight - state.height,
-          state.scrollTop + 3
+          state.scrollTop + 1
         )
       };
 
     case 'SCROLL_UP':
       return {
         ...state,
-        scrollTop: Math.max(0, state.scrollTop - 3)
+        scrollTop: Math.max(0, state.scrollTop - 1)
       };
 
     default:
@@ -47,7 +47,7 @@ export function ScrollArea({height, isStart, children}) {
   const innerRef = React.useRef();
 
   useEffect(() => {
-    if (isStart || (children.length + 3) * 3 < (height - 6)) {
+    if (isStart || (children.length) * 1 + 3 * 3 < (height - 6)) {
       setCanScroll(false);
       dispatch({
         type: 'RESET'

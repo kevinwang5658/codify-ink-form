@@ -32,6 +32,14 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps<any>> = props =>
 
   const { isFocused } = useFocus({id: props.id});
 
+  useEffect(() => {
+    if (isEditing) {
+      process.stdout.write('\x1b[?1000l');
+    } else {
+      process.stdout.write('\x1b[?1000h');
+    }
+  }, [isEditing]);
+
   useInput(
     (input, key) => {
       if (!isEditing && key.return && !key.ctrl && !key.meta) {

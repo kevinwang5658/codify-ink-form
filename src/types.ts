@@ -122,6 +122,16 @@ export type AbstractFormField<T extends string, V> = {
   onChange?: (value: V, name: string) => void;
 };
 
+export type FormFieldArray = AbstractFormField<'array', string[]> & {
+  maxLength?: number;
+  minLength?: number;
+
+  /** If supplied, it validates per item*/
+  regex?: RegExp;
+
+  placeholder?: string;
+};
+
 export type FormFieldBoolean = AbstractFormField<'boolean', boolean> & {};
 
 export type FormFieldString = AbstractFormField<'string', string> & {

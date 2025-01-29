@@ -59,7 +59,7 @@ export function Test() {
                 { type: 'string', name: 'plugin', label: 'plugin', required: true },
                 { type: 'string', name: 'version', label: 'version', required: true },
                 { type: 'string', name: 'directory', label: 'directory' },
-                { type: 'string', name: 'directories', label: 'directories' },
+                { type: 'array', name: 'directories', label: 'directories' },
               ]
             },
             {
@@ -67,7 +67,7 @@ export function Test() {
               fields: [
                 { type: 'string', name: 'plugin', label: 'plugin', required: true },
                 { type: 'string', name: 'versions', label: 'version'},
-                { type: 'string', name: 'gitUrl', label: 'plugin' },
+                { type: 'string', name: 'gitUrl', label: 'gitUrl' },
               ]
             },
           ]

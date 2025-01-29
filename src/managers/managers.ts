@@ -4,6 +4,7 @@ import { SelectFormFieldManager } from './SelectFormFieldManager.js';
 import { FormField, FormFieldManager, TypeOfField } from '../types.js';
 import { StringFormFieldManager } from './StringFormFieldManager.js';
 import { BooleanFormFieldManager } from './BooleanFormFieldManager.js';
+import { ArrayFormFieldManager } from './ArrayFormFieldManager.js';
 
 export const managers: FormFieldManager<FormField>[] = [
   new FloatFormFieldManager(),
@@ -11,6 +12,7 @@ export const managers: FormFieldManager<FormField>[] = [
   new SelectFormFieldManager(),
   new StringFormFieldManager(),
   new BooleanFormFieldManager(),
+  new ArrayFormFieldManager(),
 ];
 
 export const getManager = (

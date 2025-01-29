@@ -47,9 +47,18 @@ export const Form: React.FC<FormProps> = props => {
     }
   }, []);
 
+  const onSetEditingField = (field?: string) => {
+    const isEditing = !!editingField;
+    if (!isEditing && field) {
+      const elementNum = sections[currentTab].fields.findIndex((f) => f.name === field);
+      setFocusedElement(elementNum + 1);
+    }
+
+    setEditingField(field);
+  }
+
   const onChangeTab = (tab: number) => {
     setCurrentTab(tab);
-    focusManager.focus('0');
     setFocusedElement(0)
   }
 
@@ -107,7 +116,7 @@ export const Form: React.FC<FormProps> = props => {
     <FullScreen>
       <Box width="100%" height="90%" flexDirection="column" overflowY="hidden">
         <FormHeader {...props} headerRef={headerRef} form={form} currentTab={currentTab} onChangeTab={onChangeTab} editingField={editingField} />
-        <ScrollArea height={fullHeight - headerHeight} key={currentTab} isStart={focusedElement === 0}>
+        <ScrollArea height={fullHeight - headerHeight} key={currentTab} isStart={focusedElement === 0} editingMode={!!editingField}>
           {!editingField && sections[currentTab].description && (
             <Box marginX={4}>
               <DescriptionRenderer description={sections[currentTab]?.description} />
@@ -126,13 +135,13 @@ export const Form: React.FC<FormProps> = props => {
               ? null
               : sections[currentTab].fields.map((field, index) => (
                 <FormFieldRenderer
-                  id={index + ''}
+                  id={`${index}`}
                   field={field}
                   key={field.name + currentTab}
                   form={form}
                   value={value[currentTab][field.name]}
                   onChange={v => setValueAndPropagate(currentTab, { ...value[currentTab], [field.name]: v })}
-                  onSetEditingField={setEditingField}
+                  onSetEditingField={onSetEditingField}
                   editingField={editingField}
                   customManagers={props.customManagers}
                 />

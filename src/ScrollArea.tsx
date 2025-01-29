@@ -34,13 +34,14 @@ const reducer = (state, action) => {
   }
 };
 
-export function ScrollArea({height, isStart, children}) {
+export function ScrollArea({height, isStart, children, editingMode}) {
   const [state, dispatch] = React.useReducer(reducer, {
     height: 10,
     scrollTop: 0,
   });
   const focusManager = useFocusManager();
   const [canScroll, setCanScroll] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
   const innerRef = React.useRef();
 
   useLayoutEffect(() => {
@@ -58,6 +59,15 @@ export function ScrollArea({height, isStart, children}) {
 
     focusManager.enableFocus();
   }, [height, isStart, children.length]);
+
+  // Scroll to the top when entering or exiting edit mode
+  if (!isEditing && editingMode) {
+    setIsEditing(true);
+    dispatch({ type: 'RESET' })
+  } else if (isEditing && !editingMode) {
+    setIsEditing(false);
+    dispatch({ type: 'RESET' })
+  }
 
   React.useEffect(() => {
     const dimensions = measureElement(innerRef.current);

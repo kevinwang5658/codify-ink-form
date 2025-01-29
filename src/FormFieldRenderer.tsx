@@ -105,6 +105,7 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps<any>> = props =>
         <Box>
           <Text>{props.field.label ?? props.field.name}</Text>
           {props.field.required && <Text color="red">*</Text>}
+          <Text dimColor>{` (${props.field.type})`}</Text>
           <Text>: </Text>
         </Box>
         <Box>{component}</Box>

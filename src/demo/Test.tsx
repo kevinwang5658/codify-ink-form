@@ -1,10 +1,6 @@
 import { Box, Text, useInput, useStdout } from "ink";
 import React, { useEffect, useLayoutEffect } from 'react';
 import { Form } from '../Form.js';
-import { clearInterval } from 'node:timers';
-import { FullScreen } from '../FullScreen.js';
-
-let counter = 0;
 
 export function Test() {
   const stdout = useStdout();
@@ -14,27 +10,20 @@ export function Test() {
 
   useLayoutEffect(() => {
     stdout.write('This is ap revious message\n')
+    stdout.write('To show that previous messages will still exist...')
+    stdout.write('The prompt will open shortly')
 
     setTimeout(() => {
       process.stdout.write('\x1b[?1049h');
       process.stdout.write('\x1b[?1000h');
       setShowPrompt(true)
-    }, 3000);
+    }, 1000);
 
+    process.on('beforeExit', () => {
+      process.stdout.write('\x1b[?1049l');
+      process.stdout.write('\x1b[?1000l');
+    });
   }, []);
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      if (isSubmitted) {
-        stdout.write('hi\n')
-        counter++;
-      }
-
-      if (counter >= 1) {
-        clearInterval(id)
-      }
-    }, 1000)
-  }, [isSubmitted]);
 
   return (<Box flexDirection='column'>
     {!isSubmitted && showPrompt && (
@@ -43,6 +32,10 @@ export function Test() {
           process.stdout.write('\x1b[?1049l');
           process.stdout.write('\x1b[?1000l');
           setIsSubmitted(true)
+
+          setTimeout(() => {
+            stdout.write('Hihi\n');
+          }, 1000)
         }}
         form={{
           title: "Form title",

@@ -41,9 +41,6 @@ export function ScrollArea({height, isStart, children}) {
   });
   const focusManager = useFocusManager();
   const [canScroll, setCanScroll] = useState(true);
-
-  focusManager.enableFocus();
-
   const innerRef = React.useRef();
 
   useLayoutEffect(() => {
@@ -58,6 +55,8 @@ export function ScrollArea({height, isStart, children}) {
     } else {
       setCanScroll(true);
     }
+
+    focusManager.enableFocus();
   }, [height, isStart, children.length]);
 
   React.useEffect(() => {

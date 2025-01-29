@@ -67,7 +67,7 @@ export const Form: React.FC<FormProps> = props => {
         setFocusedElement((focusedElement) => focusedElement - 1);
         focusManager.focusPrevious();
       } else if (key.downArrow) {
-        if (focusedElement + 1 > sections[currentTab].fields.length + 2) {
+        if (focusedElement + 1 > sections[currentTab].fields.length + 2 + (canSubmitForm ? 1 : 0)) {
           return;
         }
 
@@ -127,10 +127,14 @@ export const Form: React.FC<FormProps> = props => {
               <DescriptionRenderer description={props.form.sections[currentTab]?.description} />
             </Box>
           )}
-          <Box marginLeft={1} marginTop={1}>
-            <Text bold>{sections[currentTab].title}</Text>
-          </Box>
-          <Text>{' {'}</Text>
+          {!editingField && (
+            <Box flexDirection='column'>
+              <Box marginLeft={1} marginTop={1}>
+                <Text bold>{sections[currentTab].title}</Text>
+              </Box>
+              <Text>{' {'}</Text>
+            </Box>
+          )}
           <Box flexDirection="column">
             {currentTab > props.form.sections.length - 1
               ? null
@@ -147,7 +151,9 @@ export const Form: React.FC<FormProps> = props => {
                   customManagers={props.customManagers}
                 />
               ))}
-            <Text>{' }'}</Text>
+            {!editingField && (
+              <Text>{' }'}</Text>
+            )}
             <Box flexDirection="row-reverse">
               <Button label="Add Item (duplicate)" onClicked={() => duplicateCurrentItem()}/>
             </Box>

@@ -151,10 +151,10 @@ export const Form: React.FC<FormProps> = props => {
             )}
           </Box>
           {!editingField && (
-            <Box flexDirection="row">
+            <Box flexDirection="row" marginTop={1}>
               <Box flexDirection="column" flexGrow={1} width='40%'>
                 {!editingField && sections[currentTab].description && (
-                  <Box marginX={1} marginTop={1} flexDirection='column'>
+                  <Box marginX={1} flexDirection='column'>
                     <Text underline>Description:</Text>
                     <DescriptionRenderer description={sections[currentTab]?.description} />
                   </Box>

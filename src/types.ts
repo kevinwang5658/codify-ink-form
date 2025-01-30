@@ -50,6 +50,8 @@ export interface FormStructure {
   title?: string;
   /** A form contains several sections, each displayed as a tab. */
   sections: FormSection[];
+  /** A general description for the form */
+  description?: string;
 }
 
 /**

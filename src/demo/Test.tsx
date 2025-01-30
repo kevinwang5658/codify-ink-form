@@ -38,24 +38,27 @@ export function Test() {
           }, 1000)
         }}
         form={{
-          title: "Form title",
+          title: "codify import",
+          description: 'some parameters are required to continue import',
           sections: [
             {
               title: "asdf-global",
               fields: [
                 { type: 'string', name: 'plugin', label: 'plugin', required: true },
                 { type: 'string', name: 'version', label: 'version', required: true },
-              ]
+              ],
+              description: 'Asdf global sets the global version of a asdf installed plugin.'
             },
             {
               title: "asdf-install",
               description: 'Asdf install is responsible for installing an asdf resource',
               fields: [
-                { type: 'string', name: 'directory', label: 'directory', required: true },
+                { type: 'string', name: 'directory', label: 'directory', required: true, description: 'The directory to install.' },
               ]
             },
             {
               title: "asdf-local",
+              description: 'Asdf global sets the local version of a asdf installed plugin.',
               fields: [
                 { type: 'string', name: 'plugin', label: 'plugin', required: true },
                 { type: 'string', name: 'version', label: 'version', required: true },
@@ -65,6 +68,7 @@ export function Test() {
             },
             {
               title: "asdf-plugin",
+              // description: 'Asdf plugin installs a plugin.',
               fields: [
                 { type: 'string', name: 'plugin', label: 'plugin', required: true },
                 { type: 'string', name: 'versions', label: 'version'},

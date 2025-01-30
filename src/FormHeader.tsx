@@ -32,12 +32,8 @@ export const FormHeader: React.FC<
     <Box borderStyle="double" width="100%" flexDirection="column" ref={props.headerRef}>
       <Box width="100%">
         <Box flexGrow={1}>
-          <Text bold={true}>{props.form.title}</Text>
-        </Box>
-        <Box>
-          <Text>
-            {!props.editingField ? 'Use left and right arrow keys to navigate between resources' : 'Press ESC to cancel, or Enter to complete field'}
-          </Text>
+          <Text bold>{props.form.title}</Text>
+          <Text color={'gray'}>{` (${props.form.description})`}</Text>
         </Box>
       </Box>
       <Box width="100%">

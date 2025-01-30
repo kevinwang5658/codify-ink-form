@@ -76,7 +76,8 @@ export const Form: React.FC<FormProps> = props => {
       } else if (key.downArrow) {
         // This calculates the maximum amount of children there is. We don't want to scroll past the last item
         // Fields.length is number of json fields. 2 is the add and remove buttons. Submit button is sometimes focusable
-        if (focusedElement + 1 >= sections[currentTab].fields.length + 2 + (canSubmitForm ? 1 : 0)) {
+        const totalFocusableElements = sections[currentTab].fields.length + 2 + (canSubmitForm ? 1 : 0) + ((sections.length <= 1) ? -1 : 0)
+        if (focusedElement + 1 >= totalFocusableElements) {
           return;
         }
 
@@ -119,12 +120,7 @@ export const Form: React.FC<FormProps> = props => {
     <FullScreen>
       <Box width="100%" height="90%" flexDirection="column" overflowY="hidden">
         <FormHeader {...props} headerRef={headerRef} form={form} currentTab={currentTab} onChangeTab={onChangeTab} editingField={editingField} />
-        <ScrollArea height={fullHeight - headerHeight} key={currentTab} isStart={focusedElement === -1} editingMode={!!editingField}>
-          {!editingField && sections[currentTab].description && (
-            <Box marginX={4}>
-              <DescriptionRenderer description={sections[currentTab]?.description} />
-            </Box>
-          )}
+        <ScrollArea height={fullHeight - headerHeight} key={currentTab} isStart={focusedElement === -1} numFields={sections[currentTab].fields.length} editingMode={!!editingField}>
           {!editingField && (
             <Box flexDirection='column'>
               <Box marginLeft={1} marginTop={1}>
@@ -153,19 +149,31 @@ export const Form: React.FC<FormProps> = props => {
             {!editingField && (
               <Text>{' }'}</Text>
             )}
-            <Box flexDirection="row-reverse">
-              <Button label="Add (duplicate)" id={'addButton'} onClicked={() => duplicateCurrentSection()}/>
-            </Box>
-            <Box flexDirection="row-reverse">
-              <Button label="Remove" id={'removeButton'} isEnabled={sections.length > 1} onClicked={() => removeCurrentSection()}/>
-            </Box>
           </Box>
           {!editingField && (
-            <Box flexDirection="row-reverse">
-              <SubmitButton canSubmit={canSubmitForm} onSubmit={() => {
-                props.onSubmit?.(value)
-                setIsSubmitted(true);
-              }}/>
+            <Box flexDirection="row">
+              <Box flexDirection="column" flexGrow={1} width='40%'>
+                {!editingField && sections[currentTab].description && (
+                  <Box marginX={1} marginTop={1} flexDirection='column'>
+                    <Text underline>Description:</Text>
+                    <DescriptionRenderer description={sections[currentTab]?.description} />
+                  </Box>
+                )}
+              </Box>
+              <Box flexDirection="column" flexGrow={1} width='40%'>
+                <Box flexDirection="row-reverse">
+                  <Button label="Add (duplicate)" id={'addButton'} onClicked={() => duplicateCurrentSection()}/>
+                </Box>
+                <Box flexDirection="row-reverse">
+                  <Button label="Remove" id={'removeButton'} isEnabled={sections.length > 1} onClicked={() => removeCurrentSection()}/>
+                </Box>
+                <Box flexDirection="row-reverse">
+                  <SubmitButton canSubmit={canSubmitForm} onSubmit={() => {
+                    props.onSubmit?.(value)
+                    setIsSubmitted(true);
+                  }}/>
+                </Box>
+              </Box>
             </Box>
           )}
         </ScrollArea>

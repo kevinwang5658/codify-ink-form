@@ -1,5 +1,5 @@
 {
-  "name": "@codify/ink-form",
+  "name": "@codify-cli/ink-form",
   "type": "module",
   "version": "0.0.0",
   "description": "Complex user-friendly form component for Codify",
@@ -18,7 +18,7 @@
     "commandline",
     "cmd"
   ],
-  "repository": "https://github.com/kevinwang5658/@codify/ink-form",
+  "repository": "https://github.com/kevinwang5658/codify-ink-form",
   "author": "Lukas Bach <lbach@outlook.de> modified by Kevin Wang",
   "devDependencies": {
     "@types/node": "20.14.8",

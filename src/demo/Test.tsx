@@ -49,6 +49,7 @@ export function Test() {
             },
             {
               title: "asdf-install",
+              description: 'Asdf install is responsible for installing an asdf resource',
               fields: [
                 { type: 'string', name: 'directory', label: 'directory', required: true },
               ]

@@ -94,7 +94,7 @@ export const Form: React.FC<FormProps> = props => {
     { isActive: !editingField }
   );
 
-  const duplicateCurrentItem = () => {
+  const duplicateCurrentSection = () => {
     const newTabs = [...sections]
     newTabs.splice(currentTab + 1, 0, sections[currentTab])
 
@@ -105,14 +105,14 @@ export const Form: React.FC<FormProps> = props => {
     setValue([...value]);
   }
 
-  const removeCurrentItem = () => {
+  const removeCurrentSection = () => {
     const newTabs = [...sections]
     newTabs.splice(currentTab, 1);
     value.splice(currentTab, 1)
 
     setSections(newTabs);
     setValue([...value]);
-    onChangeTab(currentTab - 1)
+    onChangeTab(Math.max(currentTab - 1, 0))
   }
 
   return (
@@ -154,10 +154,10 @@ export const Form: React.FC<FormProps> = props => {
               <Text>{' }'}</Text>
             )}
             <Box flexDirection="row-reverse">
-              <Button label="Add (duplicate)" id={'addButton'} onClicked={() => duplicateCurrentItem()}/>
+              <Button label="Add (duplicate)" id={'addButton'} onClicked={() => duplicateCurrentSection()}/>
             </Box>
             <Box flexDirection="row-reverse">
-              <Button label="Remove" id={'removeButton'} onClicked={() => removeCurrentItem()}/>
+              <Button label="Remove" id={'removeButton'} isEnabled={sections.length > 1} onClicked={() => removeCurrentSection()}/>
             </Box>
           </Box>
           {!editingField && (

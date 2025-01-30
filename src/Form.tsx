@@ -21,7 +21,7 @@ export const Form: React.FC<FormProps> = props => {
   const [editingField, setEditingField] = useState<string>();
   const canSubmitForm = useMemo(() => canSubmit(form, value), [value, form]);
   const focusManager = useFocusManager();
-  const [focusedElement, setFocusedElement] = useState(0);
+  const [focusedElement, setFocusedElement] = useState(-1); // this is -1 because there is no initial focus. The first down click will focus on element 0
   const headerRef = useRef();
   const headerHeight = headerRef.current ? measureElement(headerRef.current).height : 5
   const [, fullHeight] = useStdoutDimensions()
@@ -47,19 +47,15 @@ export const Form: React.FC<FormProps> = props => {
     }
   }, []);
 
-  const onSetEditingField = (field?: string) => {
-    const isEditing = !!editingField;
-    if (!isEditing && field) {
-      const elementNum = sections[currentTab].fields.findIndex((f) => f.name === field);
-      setFocusedElement(elementNum + 1);
-    }
-
-    setEditingField(field);
+  const onFieldExit = (fieldName) => {
+    const elementNum = sections[currentTab].fields.findIndex((f) => f.name === fieldName);
+    focusManager.focus(`${elementNum}`)
+    setFocusedElement(elementNum);
   }
 
   const onChangeTab = (tab: number) => {
     setCurrentTab(tab);
-    setFocusedElement(0)
+    setFocusedElement(-1)
   }
 
   const setValueAndPropagate = (index: number, newValue: Record<string, unknown>) => {
@@ -71,7 +67,7 @@ export const Form: React.FC<FormProps> = props => {
   useInput(
     (input, key) => {
       if (key.upArrow) {
-        if (focusedElement - 1 <= 0) {
+        if (focusedElement <= 0) {
           return;
         }
 
@@ -80,12 +76,19 @@ export const Form: React.FC<FormProps> = props => {
       } else if (key.downArrow) {
         // This calculates the maximum amount of children there is. We don't want to scroll past the last item
         // Fields.length is number of json fields. 2 is the add and remove buttons. Submit button is sometimes focusable
-        if (focusedElement + 1 > sections[currentTab].fields.length + 2 + (canSubmitForm ? 1 : 0)) {
+        if (focusedElement + 1 >= sections[currentTab].fields.length + 2 + (canSubmitForm ? 1 : 0)) {
           return;
         }
 
         setFocusedElement((focusedElement) => focusedElement + 1);
         focusManager.focusNext();
+        return;
+      }
+
+      // When escape is pressed the focus is automatically reset. We have to handle that case or else the ordering gets messed up.
+      if (key.escape) {
+        focusManager.focus('0');
+        setFocusedElement(0);
       }
     },
     { isActive: !editingField }
@@ -116,7 +119,7 @@ export const Form: React.FC<FormProps> = props => {
     <FullScreen>
       <Box width="100%" height="90%" flexDirection="column" overflowY="hidden">
         <FormHeader {...props} headerRef={headerRef} form={form} currentTab={currentTab} onChangeTab={onChangeTab} editingField={editingField} />
-        <ScrollArea height={fullHeight - headerHeight} key={currentTab} isStart={focusedElement === 0} editingMode={!!editingField}>
+        <ScrollArea height={fullHeight - headerHeight} key={currentTab} isStart={focusedElement === -1} editingMode={!!editingField}>
           {!editingField && sections[currentTab].description && (
             <Box marginX={4}>
               <DescriptionRenderer description={sections[currentTab]?.description} />
@@ -140,8 +143,9 @@ export const Form: React.FC<FormProps> = props => {
                   key={field.name + currentTab}
                   form={form}
                   value={value[currentTab][field.name]}
+                  onExit={onFieldExit}
                   onChange={v => setValueAndPropagate(currentTab, { ...value[currentTab], [field.name]: v })}
-                  onSetEditingField={onSetEditingField}
+                  onSetEditingField={setEditingField}
                   editingField={editingField}
                   customManagers={props.customManagers}
                 />

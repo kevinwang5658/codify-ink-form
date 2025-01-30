@@ -21,6 +21,7 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps<any>> = props =>
         props.onChange(currentValue);
       }
       props.onSetEditingField(undefined);
+      props.onExit(props.field.name)
     }
   };
 
@@ -28,6 +29,7 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps<any>> = props =>
     setCurrentValue(props.value);
     props.onSetEditingField(undefined);
     setError(undefined);
+    props.onExit(props.field.name)
   };
 
   const { isFocused } = useFocus({id: props.id});

@@ -189,6 +189,7 @@ export type FormFieldRendererProps<T extends FormField> = {
   form: FormStructure;
   value?: ValueOfField<T>;
   onChange: (value: ValueOfField<T>) => void;
+  onExit: (fieldName: string) => void;
   onSetEditingField: (field?: string) => void;
   editingField?: string;
   customManagers?: FormFieldManager<FormField>[];

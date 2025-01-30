@@ -19,13 +19,13 @@ export const SubmitButton: React.FC<{
           {!props.canSubmit
             ? 'There are still required inputs you have not competed yet.'
             : isFocused
-            ? 'Press Enter to submit form'
+            ? 'Press Enter to submit'
             : 'Use the arrow keys to navigate to the submit button.'}
         </Text>
       </Box>
       <Box borderStyle={'round'} borderColor={!props.canSubmit ? 'gray' : isFocused ? 'blue' : 'green'} paddingX={2}>
         <Text color={!props.canSubmit ? 'gray' : isFocused ? 'blue' : 'green'} bold={true} underline={isFocused}>
-          {props.canSubmit ? 'Submit form' : 'Cannot submit form yet'}
+          {props.canSubmit ? 'Submit' : 'Cannot submit yet'}
         </Text>
       </Box>
     </Box>

@@ -36,7 +36,7 @@ export const FormHeader: React.FC<
         </Box>
         <Box>
           <Text>
-            {!props.editingField ? 'Use arrow keys to move around' : 'Press ESC to cancel, or Enter to complete field'}
+            {!props.editingField ? 'Use left and right arrow keys to navigate between resources' : 'Press ESC to cancel, or Enter to complete field'}
           </Text>
         </Box>
       </Box>

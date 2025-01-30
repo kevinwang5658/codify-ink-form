@@ -1,8 +1,8 @@
 {
-  "name": "ink-form",
+  "name": "@codify/ink-form",
   "type": "module",
-  "version": "2.0.1",
-  "description": "Complex user-friendly form component for React Ink",
+  "version": "0.0.0",
+  "description": "Complex user-friendly form component for Codify",
   "main": "lib/index.js",
   "exports": "./lib/index.js",
   "types": "lib/index.d.ts",
@@ -18,10 +18,8 @@
     "commandline",
     "cmd"
   ],
-  "repository": "https://github.com/lukasbach/ink-form",
-  "author": "Lukas Bach <lbach@outlook.de>",
-  "license": "MIT",
-  "bugs": "https://github.com/lukasbach/ink-form/issues",
+  "repository": "https://github.com/kevinwang5658/@codify/ink-form",
+  "author": "Lukas Bach <lbach@outlook.de> modified by Kevin Wang",
   "devDependencies": {
     "@types/node": "20.14.8",
     "@types/react": "^18.2.41",

@@ -42,7 +42,7 @@ export function ScrollArea({height, isStart, children, editingMode}) {
   const focusManager = useFocusManager();
   const [canScroll, setCanScroll] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const innerRef = React.useRef();
+  const innerRef = React.useRef(null);
 
   useLayoutEffect(() => {
     // Couple of custom logic baked into here to improve the user experience
@@ -70,7 +70,7 @@ export function ScrollArea({height, isStart, children, editingMode}) {
   }
 
   React.useEffect(() => {
-    const dimensions = measureElement(innerRef.current);
+    const dimensions = innerRef.current ? measureElement(innerRef.current) : { width: 0, height: 0 };
 
     dispatch({
       type: 'SET_INNER_HEIGHT',

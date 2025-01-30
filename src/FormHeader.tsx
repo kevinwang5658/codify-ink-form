@@ -5,7 +5,7 @@ import { FormProps } from './types.js';
 export const HELP_SECTION_ID = 'Help';
 
 export const FormHeader: React.FC<
-  FormProps & { currentTab: number; onChangeTab: (tab: number) => void; editingField?: string }
+  FormProps & { currentTab: number; onChangeTab: (tab: number) => void; editingField?: string, headerRef?: React.Ref<any> }
 > = props => {
   const sections = props.form.sections;
 
@@ -29,22 +29,18 @@ export const FormHeader: React.FC<
   );
 
   return (
-    <Box borderStyle="double" width="100%" flexDirection="column">
+    <Box borderStyle="double" width="100%" flexDirection="column" ref={props.headerRef}>
       <Box width="100%">
         <Box flexGrow={1}>
-          <Text bold={true}>{props.form.title}</Text>
-        </Box>
-        <Box>
-          <Text>
-            {!props.editingField ? 'Use arrow keys to move around' : 'Press ESC to cancel, or Enter to complete field'}
-          </Text>
+          <Text bold>{props.form.title}</Text>
+          <Text color={'gray'}>{` (${props.form.description})`}</Text>
         </Box>
       </Box>
       <Box width="100%">
         <Box>
           {!props.editingField ? (
             sections.map((section, id) => (
-              <Box key={section.title}>
+              <Box key={section.title + id}>
                 <Text color="gray">[{id + 1}] </Text>
                 <Text color={props.currentTab === id ? 'blue' : undefined} underline={props.currentTab === id}>
                   {section.title}

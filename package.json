@@ -1,8 +1,8 @@
 {
-  "name": "ink-form",
+  "name": "@codify-cli/ink-form",
   "type": "module",
-  "version": "2.0.1",
-  "description": "Complex user-friendly form component for React Ink",
+  "version": "0.0.0",
+  "description": "Complex user-friendly form component for Codify",
   "main": "lib/index.js",
   "exports": "./lib/index.js",
   "types": "lib/index.d.ts",
@@ -18,27 +18,27 @@
     "commandline",
     "cmd"
   ],
-  "repository": "https://github.com/lukasbach/ink-form",
-  "author": "Lukas Bach <lbach@outlook.de>",
-  "license": "MIT",
-  "bugs": "https://github.com/lukasbach/ink-form/issues",
+  "repository": "https://github.com/kevinwang5658/codify-ink-form",
+  "author": "Lukas Bach <lbach@outlook.de> modified by Kevin Wang",
   "devDependencies": {
-    "@types/node": "^14.14.45",
+    "@types/node": "20.14.8",
     "@types/react": "^18.2.41",
-    "ink": "^4.4.1",
+    "ink": "^5.1.0",
     "prettier": "^2.2.1",
     "publish-fast": "^0.0.20",
     "react": "^18.2.0",
-    "ts-node": "^10.9.1",
+    "tsx": "^4.19.2",
     "typedoc": "^0.25.4",
     "typescript": "^5.3.2"
   },
   "scripts": {
     "start": "ts-node-esm src/demo/overview.tsx",
-    "demo:overview": "ts-node-esm src/demo/overview.tsx",
-    "demo:packagejson": "ts-node-esm src/demo/packagejson.tsx",
-    "demo:custommanager": "ts-node-esm src/demo/custommanager.tsx",
-    "demo:imperative": "ts-node-esm src/demo/imperative.ts",
+    "demo:overview": "tsx src/demo/overview.tsx",
+    "demo:counter": "tsx src/demo/counter.tsx",
+    "demo:codify": "tsx src/demo/codify.tsx",
+    "demo:packagejson": "tsx src/demo/packagejson.tsx",
+    "demo:custommanager": "tsx src/demo/custommanager.tsx",
+    "demo:imperative": "tsx src/demo/imperative.ts",
     "build": "tsc",
     "build:docs": "typedoc --out docs src/index.ts",
     "lint": "prettier --check .",
@@ -47,11 +47,11 @@
     "release": "publish-fast"
   },
   "peerDependencies": {
-    "ink": ">=4",
+    "ink": ">=5",
     "react": ">=18"
   },
   "dependencies": {
-    "ink-select-input": "^5.0.0",
+    "ink-select-input": "^6.0.0",
     "ink-text-input": "^6.0.0"
   },
   "publishConfig": {

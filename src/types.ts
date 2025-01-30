@@ -20,10 +20,10 @@ export type Description = string | string[] | JSX.Element | undefined | false;
 export interface FormProps {
   /** Structure of the form, i.e. which fields are contained in which sections. */
   form: FormStructure;
-  initialValue?: object;
+  initialValue?: Array<Record<string, any>>;
 
   /** Current value of the form. Omit to leave the component in uncontrolled mode. */
-  value?: object;
+  value?: Array<Record<string, any>>;
   onChange?: (value: object) => void;
 
   /**
@@ -32,7 +32,7 @@ export interface FormProps {
    *
    * @param value the final value of the form.
    * */
-  onSubmit?: (value: object) => void;
+  onSubmit?: (value: Array<Record<string, any>>) => void;
 
   /**
    * You can use custom field implementations, by specifying their ``type`` attribute to a custom
@@ -50,6 +50,8 @@ export interface FormStructure {
   title?: string;
   /** A form contains several sections, each displayed as a tab. */
   sections: FormSection[];
+  /** A general description for the form */
+  description?: string;
 }
 
 /**
@@ -122,6 +124,16 @@ export type AbstractFormField<T extends string, V> = {
   onChange?: (value: V, name: string) => void;
 };
 
+export type FormFieldArray = AbstractFormField<'array', string[]> & {
+  maxLength?: number;
+  minLength?: number;
+
+  /** If supplied, it validates per item*/
+  regex?: RegExp;
+
+  placeholder?: string;
+};
+
 export type FormFieldBoolean = AbstractFormField<'boolean', boolean> & {};
 
 export type FormFieldString = AbstractFormField<'string', string> & {
@@ -174,10 +186,12 @@ export interface FormFieldManager<T extends FormField> {
 }
 
 export type FormFieldRendererProps<T extends FormField> = {
+  id: string;
   field: T;
   form: FormStructure;
   value?: ValueOfField<T>;
   onChange: (value: ValueOfField<T>) => void;
+  onExit: (fieldName: string) => void;
   onSetEditingField: (field?: string) => void;
   editingField?: string;
   customManagers?: FormFieldManager<FormField>[];

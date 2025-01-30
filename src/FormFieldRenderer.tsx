@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormField, FormFieldRendererProps, SpecificFormFieldRendererProps } from './types.js';
-import { Box, useFocus, Text, useInput } from 'ink';
+import { Box, useFocus, Text, useInput, useFocusManager } from 'ink';
 import { getManager } from './managers/managers.js';
 import { DescriptionRenderer } from './DescriptionRenderer.js';
 
@@ -21,6 +21,7 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps<any>> = props =>
         props.onChange(currentValue);
       }
       props.onSetEditingField(undefined);
+      props.onExit(props.field.name)
     }
   };
 
@@ -28,9 +29,18 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps<any>> = props =>
     setCurrentValue(props.value);
     props.onSetEditingField(undefined);
     setError(undefined);
+    props.onExit(props.field.name)
   };
 
-  const { isFocused } = useFocus({});
+  const { isFocused } = useFocus({id: props.id});
+
+  useEffect(() => {
+    if (isEditing) {
+      process.stdout.write('\x1b[?1000l');
+    } else {
+      process.stdout.write('\x1b[?1000h');
+    }
+  }, [isEditing]);
 
   useInput(
     (input, key) => {
@@ -42,7 +52,7 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps<any>> = props =>
         save();
       }
     },
-    { isActive: isFocused }
+    { isActive: isFocused || isEditing }
   );
 
   if (hide) {
@@ -52,15 +62,17 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps<any>> = props =>
   if (!isEditing) {
     const RenderValue = manager?.renderValue ?? (() => <>{props.value}</>);
     return (
-      <Box marginX={2} paddingX={1} borderStyle="round" borderColor={isFocused ? 'blue' : undefined}>
+      <Box paddingX={1}>
         <Box flexGrow={1}>
-          <Text underline={isFocused} color={isFocused ? 'blue' : undefined}>
-            {props.field.label ?? props.field.name}
-          </Text>
-          {props.field.required && <Text color="red">*</Text>}
-          <Text>: </Text>
-          <Text dimColor>
-            <RenderValue value={props.value as any} field={props.field} />
+          <Text backgroundColor={isFocused ? 'magentaBright' : undefined}>
+            <Text>
+              {`${isFocused ? '> ' : '  '}${(props.field.label ?? props.field.name)}`}
+            </Text>
+            {props.field.required && <Text color="red">*</Text>}
+            <Text>: </Text>
+            <Text dimColor>
+              <RenderValue value={props.value as any ?? '<undefined>'} field={props.field} />
+            </Text>
           </Text>
         </Box>
         {isFocused && (
@@ -95,6 +107,7 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps<any>> = props =>
         <Box>
           <Text>{props.field.label ?? props.field.name}</Text>
           {props.field.required && <Text color="red">*</Text>}
+          <Text dimColor>{` (${props.field.type})`}</Text>
           <Text>: </Text>
         </Box>
         <Box>{component}</Box>
